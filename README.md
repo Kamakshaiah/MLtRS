@@ -9,6 +9,7 @@ I.  Supervised Learning
   5.  Random Forests
   6.  Naive Bayes Calssifier
   7.  Neural Networks
+  
 II.  Unsupervised Learning
   1.  PCA
   2.  Gaussian Mixture Modeling 
