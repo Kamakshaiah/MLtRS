@@ -2,19 +2,19 @@
 Machine Learning through R Shiny (MLTRS) is open source server level web application developed by using RShiny. The application right now supports the following algorithms. 
 
 1.  Supervised Learning 
-  1.1.  Logistic regression
-  1.2.  kNN
-  2.3.  SVM
-  2.4.  Decision Trees 
-  2.5.  Random Forests
-  2.6.  Naive Bayes Calssifier
-  2.7.  Neural Networks
+  1.  Logistic regression
+  2.  kNN
+  3.  SVM
+  4.  Decision Trees 
+  5.  Random Forests
+  6.  Naive Bayes Calssifier
+  7.  Neural Networks
 2.  Unsupervised Learning
-  2.1.  PCA
-  2.2.  Gaussian Mixture Modeling 
-  2.3.  Novelty & Outlier Detection
-  2.4.  Fuzzy C-Means Clustering 
-  2.5.  Manifold Learnign (MDS) [yet to be implemented]
+  1.  PCA
+  2.  Gaussian Mixture Modeling 
+  3.  Novelty & Outlier Detection
+  4.  Fuzzy C-Means Clustering 
+  5.  Manifold Learnign (MDS) [yet to be implemented]
   
 The application depends on following packages:
 
