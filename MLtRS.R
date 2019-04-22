@@ -9,22 +9,15 @@ library(gmodels)
 library(caret)
 library(rattle)
 library(ranger)
-# library(klaR)
+library(klaR)
 library(kernlab)
-# library(micad)
+library(micad)
 library(e1071)
-# library(NeuralNetTools)
-# library(neuralnet)
+library(NeuralNetTools)
+library(neuralnet)
 library(nnet)
 library(mclust)
 
-# library(pROC)
-
-# gaussian mixture 
-#https://www.r-bloggers.com/an-intro-to-gaussian-mixture-modeling/
-
-# manifold learning  (MDS)
-# 
 ui <- fluidPage(
   
   navbarPage(title = "MLtRS",
@@ -1049,17 +1042,12 @@ server <- function(input, output, session) {
       return(dim(train_set)[1]/dim(df)[1])
     }
     
-    # abalone_train <- df[train_index, ]
-    # abalone_test <- df[-train_index, ]
-    
+  
     if (input$rfoption == "Train & Test Data"){
       return(list(head(train_set), head(test_set), dim(train_set), dim(test_set)))
     }
     
     var <- input$rfvar
-    # var <- as.factor(df[, input$rfvar])
-    # rf_fit <- train(as.formula(paste(as.factor(var), "~", ".")), data = abalone_train, method = "rf")
-    # rf_fit <- train(as.factor(old) ~ ., data = abalone_train, method = "rf")
     
     rf_fit <- randomForest::randomForest(as.formula(paste(var, "~", ".")), data = train_set, importance = TRUE, proximity = TRUE)
     
