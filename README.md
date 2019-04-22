@@ -1,5 +1,5 @@
 # MLtRS
-Machine Learning through R Shiny (MLTRS) is open source server level web application developed by using RShiny. The application right now supports the following algorithms. 
+Machine Learning through R Shiny (MLtRS) is open source server level web application developed by using RShiny. The application right now supports the following algorithms. 
 
 I.  Supervised Learning 
   1.  Logistic regression
