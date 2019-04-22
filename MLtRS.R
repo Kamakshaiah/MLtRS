@@ -9,10 +9,14 @@ library(gmodels)
 library(caret)
 library(rattle)
 library(ranger)
-library(klaR)
+# library(klaR)
 library(kernlab)
-library(micad)
+# library(micad)
 library(e1071)
+# library(NeuralNetTools)
+# library(neuralnet)
+library(nnet)
+library(mclust)
 
 # library(pROC)
 
@@ -187,8 +191,12 @@ ui <- fluidPage(
                                    sidebarPanel(
                                      selectInput("logrvar", "Select Variable", choices = "", selected = ""),
                                      textInput("logrprop", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
-                                     textInput("logryname", "Class Variable", value = "num", placeholder = "Class Variable"),
-                                     radioButtons("logroption", "Select Method", choices = c("Show Prop.", "Fit", "Coef.", "Pred. Accuracy"))
+                                     # textInput("logryname", "Class Variable", value = "num", placeholder = "Class Variable"),
+                                     radioButtons("logroption", "Select Method", choices = c("Show Prop.", "Fit", "Coef.", "Pred. Accuracy")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical. Use '1. logr_svm_heart_data' from datasets for testing."), 
+                                     hr(),
+                                     a(href="http://mlwiki.org/index.php/Logistic_Regression", "Logistic Regression")
                                    ),
                                    mainPanel(
                                      div(verbatimTextOutput("logroutput"))
@@ -199,8 +207,11 @@ ui <- fluidPage(
                         tabPanel("kNN",
                                  sidebarLayout(
                                    sidebarPanel(
-                                     textInput("knntrain", "Select Proportion", value = 0.8, placeholder = "Percentage of rows")
-                                     
+                                     textInput("knntrain", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
+                                     radioButtons("knnoption", "Select Option", choices = c("Show Prop.", "Show Train & Test Data", "Show No. of Classes", "Fit", "Accuracy")),
+                                     hr(),
+                                     helpText("First column of data set must be categorical/use '2. kNN_sepsis_numerical' from datasets for testing."),
+                                     a(href="https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm", "kNN")
                                    ),
                                    mainPanel(
                                      div(verbatimTextOutput("knnoutput"))
@@ -213,7 +224,11 @@ ui <- fluidPage(
                                      selectInput("svmvar", "Select Variable", choices = "", selected = ""),
                                      textInput("svmprop", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
                                      textInput("svmyname", "Class Variable", value = "num", placeholder = "Class Variable"),
-                                     radioButtons("svmoption", "Select Method", choices = c("Show Prop.", "Fit", "Coef.", "Predicted", "Pred. Accuracy")) 
+                                     radioButtons("svmoption", "Select Method", choices = c("Show Prop.", "Fit", "Predicted", "Pred. Accuracy")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical. Use '1. logr_svm_heart_data' from datasets for testing."),
+                                     hr(),
+                                     a(href="http://mlwiki.org/index.php/Support_Vector_Machines", "SVM")
                                    ),
                                    mainPanel(verbatimTextOutput("svmoutput"))
                                  )
@@ -225,8 +240,12 @@ ui <- fluidPage(
                                      selectInput("dtvar2", "Select Variable", choices = "", selected = "", multiple = TRUE),
                                      textInput("dtprop", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
                                      textInput("dtyname", "Class Variable", value = "num", placeholder = "Class Variable"),
-                                     radioButtons("dtoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predicted", "Pred. Accuracy")), 
-                                     radioButtons("dtplot", "Select Plot", choices = c("No Plot", "QPlot", "DTree"))
+                                     radioButtons("dtoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Predicted", "Pred. Accuracy")), 
+                                     radioButtons("dtplot", "Select Plot", choices = c("No Plot", "QPlot", "DTree")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical and numerical. Use '4. DT_breast_cancer.csv' from datasets for testing."),
+                                     hr(),
+                                     a(href="http://mlwiki.org/index.php/Decision_Tree_Exercises", "Decision Trees")
                                    ),
                                    mainPanel(
                                      div(verbatimTextOutput("dtoutput")),
@@ -241,8 +260,11 @@ ui <- fluidPage(
                                      
                                      textInput("rfprop", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
                                      textInput("rfyname", "Class Variable", value = "old", placeholder = "Class Variable"),
-                                     radioButtons("rfoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predicted", "Pred. Accuracy"))
-                                     
+                                     radioButtons("rfoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predicted", "Pred. Accuracy")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical and numerical. Use '5. RF_abalone_short.csv' from datasets for testing."),
+                                     hr(),
+                                     a(href="https://en.wikipedia.org/wiki/Random_forest", "Random Forest")
                                    ),
                                    mainPanel(
                                      div(verbatimTextOutput("rfoutput"))
@@ -257,8 +279,11 @@ ui <- fluidPage(
                                      
                                      textInput("nbprop", "Select Proportion", value = 0.8, placeholder = "Percentage of rows"),
                                      textInput("nbyname", "Class Variable", value = "sepsis", placeholder = "Class Variable"),
-                                     radioButtons("nboption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predicted", "Pred. Accuracy"))
-                                     
+                                     radioButtons("nboption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predicted", "Pred. Accuracy")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical and numerical. Use '6. Naive_Bayes_sepsis.csv' from datasets for testing."),
+                                     hr(),
+                                     a(href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier", "Naive Bayes Classifier")
                                    ),
                                    mainPanel(
                                      div(verbatimTextOutput("nboutput"))
@@ -271,10 +296,19 @@ ui <- fluidPage(
                                    sidebarPanel(
                                      selectInput("nnvar", "Select Variable", choices = "", selected = ""),
                                      textInput("nnprop", "Proportion", value = 0.8, placeholder = "Proportion for training data"),
-                                     radioButtons("nnoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predictions", "Pred. Accuracy"))
+                                     textInput("nnhl1", "Value for First Hidden Layer", value = 5, placeholder = "Value for first hidden layer"),
+                                     textInput("nnhl2", "Value for Second Hidden Layer", value = 3, placeholder = "Value for first hidden layer"),
+                                     textInput("nntype", "Method", value = "neuralnet", placeholder = "Write name of the method"),
+                                     radioButtons("nnoption", "Select Method", choices = c("No Option", "Table", "Show Prop.", "Train & Test Data", "Fit", "Summary", "Predictions", "Pred. Accuracy", "Plot")),
+                                     # radioButtons("nnplottype", "Select Plot", choices = c("No Plot", "Weight Decay", "Network Plot")),
+                                     hr(),
+                                     helpText("Variable selected must be categorical and numerical. Use '7. NN_prostrate.csv' from datasets for testing."),
+                                     hr(),
+                                     a(href="http://mlwiki.org/index.php/Neural_Networks", "Neural Networks")
                                    ),
                                    mainPanel(
-                                     div(verbatimTextOutput("nnoutput"))
+                                     div(verbatimTextOutput("nnoutput")),
+                                     div(plotOutput("nnplot"))
                                    )
                                  )
                         )
@@ -739,8 +773,9 @@ server <- function(input, output, session) {
     
     trainprop <- nrow(training)/(nrow(testing)+nrow(training))
     
-    # var <- as.name(input$logrvar)
-    mod_fit <- train(num ~ .,  data=training, method="glm", family="binomial")
+    # var1 <- input$logryname
+    
+    mod_fit <- train(as.formula(paste(var, "~", ".")),  data=training, method="glm", family="binomial")
     
     expout <- exp(coef(mod_fit$finalModel))
     
@@ -764,7 +799,7 @@ server <- function(input, output, session) {
     if (input$logroption == "Pred. Accuracy"){
       return(confmat)
     }
-    
+    return(var1)
   })
   
   
@@ -783,25 +818,62 @@ server <- function(input, output, session) {
   })
   
   # KNN
+  
   knnout <- reactive({
+    
     df <- data_input()
+    
     rows <- round(as.numeric(input$knntrain)*dim(df)[1])
+    
+    if(input$knnoption == "Show Prop."){
+     return(rows)  
+    }
+    
     lascol <- dim(df)[2]
+    
     train_data <- df[1:rows, 2:lascol]
     test_data <- df[-(1:rows), 2:lascol]
-    # 
+     
+    if(input$knnoption == "Show Train & Test Data"){
+      return(list(head(train_data), head(test_data)))
+    }
+    
     train_labels <- df[1:rows, 1]
     test_labels <- df[-(1:rows), 1]
     
     k_ = round(sqrt(dim(df)[1]))
     
+    if(input$knnoption == "Show No. of Classes"){
+      return(k_)
+    }
+    
     fit <- knn(train = train_data, test = test_data, cl = train_labels, k = k_)
+    
+    if(input$knnoption == "Fit"){
+      return(data.frame(fit))
+    }
+    
     out <- CrossTable(x = test_labels, y = fit, prop.chisq = FALSE)
-    return(out)
+    
+    if(input$knnoption == "Accuracy"){
+      return(out)
+    }
+    
   })
   
   output$knnoutput <- renderPrint({
-    knnout()
+    if(input$knnoption == "Show Prop."){
+      knnout()
+    } else if(input$knnoption == "Show Train & Test Data"){
+      knnout()
+    } else if(input$knnoption == "Show No. of Classes"){
+      knnout()
+    } else if(input$knnoption == "Fit"){
+      knnout()
+    } else if(input$knnoption == "Accuracy"){
+      knnout()
+    }
+    
   })
   
   
@@ -825,11 +897,13 @@ server <- function(input, output, session) {
       return(list(dim(training), dim(testing)))
     }
     
-    training[,"num"] = factor(training[,"num"])
+    training[,input$svmvar] = factor(training[,input$svmvar])
+    
+    var <- input$svmvar
     
     trctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
     
-    svm_Linear <- train(num ~., data = training, method = "svmLinear",
+    svm_Linear <- train(as.formula(paste(var, "~", ".")), data = training, method = "svmLinear",
                         trControl=trctrl,
                         preProcess = c("center", "scale"),
                         tuneLength = 10)
@@ -841,7 +915,7 @@ server <- function(input, output, session) {
     test_pred <- predict(svm_Linear, newdata = testing)
     
     if (input$svmoption == "Predicted"){
-      return(test_pred)
+      return(data.frame(test_pred))
     }
     
     confmat <- confusionMatrix(test_pred, testing[, "num"] )
@@ -877,6 +951,7 @@ server <- function(input, output, session) {
   )
   
   dtout <- reactive({
+    
     df <- data_input()
     tab = table(df[, input$dtvar])
     
@@ -884,10 +959,10 @@ server <- function(input, output, session) {
       return(tab)
     }
     
-    index = createDataPartition(y=mydf$Class_num, p=0.7, list=FALSE)
+    index = createDataPartition(y=df[, input$dtvar], p=0.7, list=FALSE)
     
-    train.set = mydf[index,]
-    test.set = mydf[-index,]
+    train.set = df[index,]
+    test.set = df[-index,]
     
     if (input$dtoption == "Train & Test Data"){
       return(list(head(train.set), head(test.set)))
@@ -897,15 +972,18 @@ server <- function(input, output, session) {
       return(dim(train.set))
     }
     
+    var <- input$dtvar
+    
+    brest.tree = train(as.formula(paste(var, "~", ".")),
+                       data=train.set,
+                       method="rpart",
+                       trControl = trainControl(method = "cv"))
+    
     if (input$dtplot == "QPlot"){
       
       plot(brest.tree$finalModel, uniform=TRUE, main="Classification Tree"); text(brest.tree$finalModel, use.n.=TRUE, all=TRUE, cex=.8)
     }
     
-    brest.tree = train(Class_num ~ .,
-                       data=train.set,
-                       method="rpart",
-                       trControl = trainControl(method = "cv"))
     
     if (input$dtoption == "Fit"){
       return(brest.tree)
@@ -959,39 +1037,53 @@ server <- function(input, output, session) {
       return(table(df[, input$rfvar]))
     }
     
-    train_index <- sample(1:nrow(df), as.numeric(input$rfprop) * nrow(df))
+    # train_index <- sample(1:nrow(df), as.numeric(input$rfprop) * nrow(df))
+    
+    prop <- as.numeric(input$rfprop)
+    
+    train_set <- df[1:(nrow(df)*prop),]
+    test_set <- df[-(1:(nrow(df)*prop)),]
+    
     
     if (input$rfoption == "Show Prop."){
-      return(length(train_index)/dim(df)[1])
+      return(dim(train_set)[1]/dim(df)[1])
     }
     
-    abalone_train <- mydf[train_index, ]
-    abalone_test <- mydf[-train_index, ]
+    # abalone_train <- df[train_index, ]
+    # abalone_test <- df[-train_index, ]
     
     if (input$rfoption == "Train & Test Data"){
-      return(list(head(abalone_train), head(abalone_test)))
+      return(list(head(train_set), head(test_set), dim(train_set), dim(test_set)))
     }
     
+    var <- input$rfvar
+    # var <- as.factor(df[, input$rfvar])
+    # rf_fit <- train(as.formula(paste(as.factor(var), "~", ".")), data = abalone_train, method = "rf")
+    # rf_fit <- train(as.factor(old) ~ ., data = abalone_train, method = "rf")
     
-    rf_fit <- train(as.factor(old) ~ .,
-                    data = abalone_train,
-                    method = "ranger")
+    rf_fit <- randomForest::randomForest(as.formula(paste(var, "~", ".")), data = train_set, importance = TRUE, proximity = TRUE)
     
     if (input$rfoption == "Fit"){
       return(rf_fit)
     }
     
-    abalone_rf_pred <- predict(rf_fit, abalone_test)
-    out <- confusionMatrix(abalone_rf_pred, abalone_test[, "old"])
-    
-    if (input$rfoption == "Predicted"){
-      return(data.frame(abalone_rf_pred))
+    if (input$rfoption == "Summary"){
+      return(summary(rf_fit))
     }
     
+    rf_pred <- predict(rf_fit, test_set)
+    
+    out <- confusionMatrix(round(rf_pred), as.numeric(test_set[, input$rfvar]))
+
+    if (input$rfoption == "Predicted"){
+      return(data.frame(rf_pred))
+    }
+
     if (input$rfoption == "Pred. Accuracy"){
       return(out)
     }
     
+    # return(out)
   })
   
   output$rfoutput <- renderPrint({
@@ -1076,15 +1168,30 @@ server <- function(input, output, session) {
       return(list(head(train.set), head(test.set)))
     }
     
-    model <- train(prostate ~ ., train.set, method='nnet', trace = FALSE)
+    var <- input$nnvar
+    hl1 <- as.numeric(input$nnhl1)
+    hl2 <- as.numeric(input$nnhl2)
+    
+    nngrid <- expand.grid(
+      layer1 = hl1, 
+      layer2 = hl2,
+      layer3 = 1
+      )
+    
+    model <- train(as.formula(paste(var, "~", ".")), train.set, method="nnet", trace = FALSE)
+    # model <- neuralnet(as.formula(paste(var, "~", ".")), data=train.set, hidden = c(5, 3), linear.output=T)
     
     if (input$nnoption == "Fit"){
       return(model)
     }
     
-    prediction <- predict(model, test.set[-11]) 
+    if (input$nnoption == "Summary"){
+      return(summary(model))
+    }
     
-    out <- confusionMatrix(round(prediction), test.set[, "prostate"])
+    prediction <- predict(model, test.set) 
+    
+    out <- confusionMatrix(round(prediction), test.set[, var])
     
     if (input$nnoption == "Predictions"){
       return(prediction)
@@ -1093,12 +1200,36 @@ server <- function(input, output, session) {
     if (input$nnoption == "Pred. Accuracy"){
       return(out)
     }
+    
+    if (input$nnoption == "Plot"){
+      plotnet(model)
+    }
+    # if (input$nnplottype == "Weight Decay"){
+    #   plot(model)
+    # }
+    # 
+    # if (input$nnplottype == "Network Plot"){
+    #   plotnet(model)
+    # }
     })
   
   
   output$nnoutput <- renderPrint({
     nnout()
   })
+  
+  output$nnplot <- renderPlot({
+    # if (input$nnplottype == "Weight Decay"){
+    #   nnout()
+    # } else if (input$nnplottype == "Network Plot"){
+    #   nnout()
+    # }
+    
+    if (input$nnoption == "Plot"){
+      nnout()
+    }
+  })
+  
   
   # UNSUPERVISED LEARNING
   # PCA
@@ -1132,7 +1263,9 @@ server <- function(input, output, session) {
       return(trainPC)
     }
     
-    modelFit <- train(prostate ~ ., method="glm", data=training)
+    var <- input$pcavar
+    
+    modelFit <- train(as.formula(paste(var, "~", ".")), method="glm", data=training)
     
     if (input$pcaoption == "Fit"){
       return(modelFit)
@@ -1144,7 +1277,7 @@ server <- function(input, output, session) {
       return(data.frame(testPC))
     }
     
-    out <- confusionMatrix(round(testPC), testing$prostate)
+    out <- confusionMatrix(round(testPC), testing[, var])
     
     if (input$pcaoption == "Mod. Accuracy"){
       return(out)
@@ -1171,10 +1304,10 @@ server <- function(input, output, session) {
       return(table(df[, input$gmvar]))
     }
     
-    class <- df[, "class"]
-     
+    class <- df[, input$gmvar]
+    X <- df[, -c(1, 2)]
+    
     if (input$gmoption == "Data"){
-      X <- df[, 3:5]
       return(head(X))
     }
 
@@ -1215,9 +1348,11 @@ server <- function(input, output, session) {
     }
     
     # confusion matrix
-
+    
+    hclust.avg <- hclust(dist(X),method="average")
+    
     if (input$gmoption == "HC"){
-      hclust.avg <- hclust(dist(X),method="average")
+      
       gps <- c(names(X))[cutree(hclust.avg,3)]
       out <- table(true=class,pred=gps)
       return(out)
@@ -1255,52 +1390,14 @@ server <- function(input, output, session) {
     
   })
   
-  # # Fuzzy c-means clustering 
+ 
   
-  observeEvent(input$file1, {
-    updateSelectInput(session, inputId = "fmcvar1", choices = names(data_input()))
-    updateSelectInput(session, inputId = "fmcvar2", choices = names(data_input()))
-  }
-  )
-  
-  fmcout <- reactive({
-    
-    df <- data_input()
-    
-    result <- cmeans(df[-11], centers=3, iter.max=100, m=2, method="cmeans")  # 3 clusters
-    
-    if (input$fmcoption == "Fit"){
-      return(result)
-    }
-    
-    if (input$fmplottype == "Plot"){
-      plot(df[, input$fmcvar2][1], df[, input$fmcvar2][2], col=result$cluster)
-      points(result$centers[,c(1,2)], col=1:3, pch=19, cex=2)
-    }
-    
-    if (input$fmcoption == "Memberships"){
-      result$membership[1:5,]
-      out <- table(mydf[, "prostate"], result$cluster)
-      return(out)
-    }
-    
-  })
-  
-  output$fmcoutput <- renderPrint({
-    fmcout()
-  })  
-  
-  output$fmcplot <- renderPlot({
-    if (input$fmcplottype == "Plot"){
-      fmcout() 
-    }
-  })
-  
-  # ANOMALY DETECTION 
+  # ANOMALY DETECTION (in testing with iris data set)
   
   mlout <- reactive({
     
-    df <- data(input$mldata)
+    df <- data_input()
+    
     micad.model <- micad(x=iris_anomaly[iris_anomaly$ANOMALY==0,], 
                          vars=c("SEPAL_LENGTH","SEPAL_WIDTH",
                                 "PETAL_LENGTH","PETAL_WIDTH",
@@ -1328,7 +1425,46 @@ server <- function(input, output, session) {
   )
   
   
+  # # Fuzzy c-means clustering (prostate data)
   
+  observeEvent(input$file1, {
+    updateSelectInput(session, inputId = "fmcvar1", choices = names(data_input()))
+    updateSelectInput(session, inputId = "fmcvar2", choices = names(data_input()))
+  }
+  )
+  
+  fmcout <- reactive({
+    
+    df <- data_input()
+    
+    result <- cmeans(df[-11], centers=3, iter.max=100, m=2, method="cmeans")  # 3 clusters
+    
+    if (input$fmcoption == "Fit"){
+      return(result)
+    }
+    
+    if (input$fmplottype == "Plot"){
+      plot(df[, input$fmcvar2][1], df[, input$fmcvar2][2], col=result$cluster)
+      points(result$centers[,c(1,2)], col=1:3, pch=19, cex=2)
+    }
+    
+    if (input$fmcoption == "Memberships"){
+      result$membership[1:5,]
+      out <- table(df[, "prostate"], result$cluster)
+      return(out)
+    }
+    
+  })
+  
+  output$fmcoutput <- renderPrint({
+    fmcout()
+  })  
+  
+  output$fmcplot <- renderPlot({
+    if (input$fmcplottype == "Plot"){
+      fmcout() 
+    }
+  })
   
   
   # Contact Information 
