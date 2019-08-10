@@ -7,7 +7,7 @@ I.  Supervised Learning
   3.  SVM
   4.  Decision Trees 
   5.  Random Forests
-  6.  Naive Bayes Calssifier
+  6.  Naive Bayes Classifier
   7.  Neural Networks
   
 II.  Unsupervised Learning
